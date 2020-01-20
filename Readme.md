@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ксения Зуева](https://up.htmlacademy.ru/javascript/19/user/974729).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Макаров](https://up.htmlacademy.ru/javascript/19/user/429879).
 
 ---
 
