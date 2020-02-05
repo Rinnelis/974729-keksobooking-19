@@ -102,7 +102,7 @@ var fragment = document.createDocumentFragment();
 for (var i = 1; i <= CARD_COUNT; i++) {
   var advertDescription = DESCRIPTIONS[i - 1];
   var image = makeAvatar(i);
-  var cardExample = renderCard(image, advertDescription);
+  var card = renderCard(image, advertDescription);
   cards.push(renderCard(image, advertDescription));
   fragment.appendChild(renderPin(image, advertDescription));
 }
