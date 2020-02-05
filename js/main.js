@@ -44,15 +44,26 @@ var createFeaturesMarkup = function () {
 };
 
 // Создание аватара
-// var makeAvatar = function (number) {
-//   var image = 'img/avatars/user0' + number + '.png';
-//   return image;
-// };
+var makeAvatar = function (number) {
+  var image = 'img/avatars/user0' + number + '.png';
+  return image;
+};
 
-for (var k = 1; k <= CARD_COUNT; k++) {
-  var advertDescription = DESCRIPTIONS[k - 1];
-  var image = 'img/avatars/user0' + k + '.png';
-}
+// Создание элемента указателя по шаблону
+var pinTemplate = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
+
+var renderPin = function (avatar, description) {
+  var pinElement = pinTemplate.cloneNode(true);
+  var pinXTransfer = 10; // случайное число
+  var pinУTransfer = 20; // случайное число
+
+  pinElement.style = 'left: ' + (getIntervalNumber(350, 600) + pinXTransfer) + 'px; top: ' + (getIntervalNumber(350, 600) + pinУTransfer) + 'px;';
+  pinElement.querySelector('img').src = avatar;
+  pinElement.querySelector('img').alt = description;
+  return pinElement;
+};
 
 // Создание карточки из шаблона
 var similarCardTemplate = document.querySelector('#card')
@@ -63,7 +74,7 @@ var renderCard = function (avatar, description) {
   var cardElement = similarCardTemplate.cloneNode(true);
   var features = createFeaturesMarkup();
 
-  cardElement.querySelector('.popup__avatar').src = image;
+  cardElement.querySelector('.popup__avatar').src = avatar;
   cardElement.querySelector('.popup__title').textContent = TITLES[getRandomElement(TITLES)];
   cardElement.querySelector('.popup__text--address').textContent = getIntervalNumber(350, 600) + ', ' + getIntervalNumber(350, 600);
   cardElement.querySelector('.popup__text--price').textContent = PRICES[getRandomElement(PRICES)] + ' ₽/ночь';
@@ -78,7 +89,7 @@ var renderCard = function (avatar, description) {
     featuresList.appendChild(features[i]);
   }
 
-  cardElement.querySelector('.popup__description').textContent = advertDescription;
+  cardElement.querySelector('.popup__description').textContent = description;
   cardElement.querySelector('.popup__photo').src = PHOTOS[getRandomElement(PHOTOS)];
 
   return cardElement;
@@ -86,9 +97,11 @@ var renderCard = function (avatar, description) {
 
 // Создание и заполнение фрагмента
 var fragment = document.createDocumentFragment();
-
 for (var i = 1; i <= CARD_COUNT; i++) {
+  var advertDescription = DESCRIPTIONS[i - 1];
+  var image = makeAvatar(i);
   fragment.appendChild(renderCard(image, advertDescription));
+  fragment.appendChild(renderPin(image, advertDescription));
 }
 
 var advert = document.querySelector('.map__pins');
@@ -97,18 +110,3 @@ advert.appendChild(fragment);
 // Отрисовка на карте
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
-
-// Создание элемента указателя по шаблону
-var pinTemplate = document.querySelector('#pin').content;
-
-var renderPin = function () {
-  var pinElement = pinTemplate.cloneNode(true);
-  var pinXTransfer = 10; // случайное число
-  var pinУTransfer = 20; // случайное число
-
-  pinElement.style = 'left: ' + getIntervalNumber(350, 600) + pinXTransfer + 'px; top: ' + getIntervalNumber(350, 600) + pinУTransfer;
-  pinElement.src = image;
-  pinElement.textContent = advertDescription;
-
-  return pinElement;
-};
