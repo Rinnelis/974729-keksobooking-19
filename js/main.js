@@ -95,17 +95,25 @@ var renderCard = function (avatar, description) {
   return cardElement;
 };
 
+var cards = [];
+
 // Создание и заполнение фрагмента
 var fragment = document.createDocumentFragment();
 for (var i = 1; i <= CARD_COUNT; i++) {
   var advertDescription = DESCRIPTIONS[i - 1];
   var image = makeAvatar(i);
-  fragment.appendChild(renderCard(image, advertDescription));
+  var cardExample = renderCard(image, advertDescription);
+  cards.push(renderCard(image, advertDescription));
   fragment.appendChild(renderPin(image, advertDescription));
 }
 
-var advert = document.querySelector('.map__pins');
-advert.appendChild(fragment);
+// Добавляет указатели на карту
+var pinElement = document.querySelector('.map__pins');
+pinElement.appendChild(fragment);
+
+// Добавляет объявления на карту
+var filtersContainer = document.querySelector('.map__filters-container');
+filtersContainer.before(cards[0]);
 
 // Отрисовка на карте
 var map = document.querySelector('.map');
