@@ -16,6 +16,9 @@ function getIntervalNumber(min, max) {
 }
 
 var getFeatures = function (feature) {
+  var featuresList = similarCardTemplate.querySelector('.popup__features');
+  featuresList.innerHTML = '';
+
   var li = document.createElement('li');
   li.classList.add('popup__feature');
   li.classList.add('popup__feature--' + feature);
@@ -25,14 +28,11 @@ var getFeatures = function (feature) {
   for (var i = 0; i < length; i++) {
     features.push(FEATURES[i]);
   }
-  return features;
+  return feature;
 };
 
-var makeAvatar = function () {
-  for (var i = 1; i <= CARD_COUNT; i++) {
-    console.log(i);
-    var avatar = 'img/avatars/user0' + i + '.png';
-  }
+var makeAvatar = function (i) {
+  var avatar = 'img/avatars/user0' + i + '.png';
   return avatar;
 };
 
@@ -47,7 +47,7 @@ var similarCardTemplate = document.querySelector('#card')
 var renderCard = function () {
   var cardElement = similarCardTemplate.cloneNode(true);
 
-  cardElement.querySelector('.popup__avatar').src = makeAvatar();
+  cardElement.querySelector('.popup__avatar').src = makeAvatar(i);
   cardElement.querySelector('.popup__title').textContent = TITLE[getRandomElement(TITLE)];
   cardElement.querySelector('.popup__text--address').textContent = getIntervalNumber(350, 600) + ', ' + getIntervalNumber(350, 600);
   cardElement.querySelector('.popup__text--price').textContent = PRICE[getRandomElement(PRICE)] + ' /ночь';
@@ -65,7 +65,7 @@ var fragment = document.createDocumentFragment();
 
 for (var i = 1; i <= CARD_COUNT; i++) {
   fragment.appendChild(renderCard(i));
-  fragment.appendChild(getFeatures());
+  // fragment.appendChild(getFeatures());
 }
 
 var advert = document.querySelector('.map__pins');
