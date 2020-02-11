@@ -11,6 +11,11 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var DESCRIPTIONS = ['описание1', 'описание2', 'описание3', 'описание4', 'описание5', 'описание6', 'описание7', 'описание8'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+// var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
+
+var mapPinMain = document.querySelector('.map__pin--main');
+
 // Функции создания рандомных элементов
 function getIntervalNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -107,14 +112,27 @@ for (var i = 1; i <= CARD_COUNT; i++) {
   fragment.appendChild(renderPin(image, advertDescription));
 }
 
-// Добавляет указатели на карту
-var pinElement = document.querySelector('.map__pins');
-pinElement.appendChild(fragment);
-
 // Добавляет объявления на карту
 var filtersContainer = document.querySelector('.map__filters-container');
 filtersContainer.before(cards[0]);
 
-// Отрисовка на карте
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+
+// Переход в активный режим и отрисовка указателей на карте
+var activeRegime = function () {
+  var map = document.querySelector('.map');
+  map.classList.remove('map--faded');
+  var pinElement = document.querySelector('.map__pins');
+  pinElement.appendChild(fragment);
+};
+
+mapPinMain.addEventListener('mousedown', function () {
+  if (event.which === 1) {
+    activeRegime();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    activeRegime();
+  }
+});
