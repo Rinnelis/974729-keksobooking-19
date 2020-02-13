@@ -108,8 +108,8 @@ var fragment = document.createDocumentFragment();
 for (var i = 1; i <= CARD_COUNT; i++) {
   var advertDescription = DESCRIPTIONS[i - 1];
   var image = makeAvatar(i);
-  var card = renderCard(image, advertDescription);
-  cards.push(card);
+  // var card = renderCard(image, advertDescription); <== отменяет отрисовку карточки !!!
+  // cards.push(card);
   fragment.appendChild(renderPin(image, advertDescription));
 }
 
@@ -145,6 +145,9 @@ var deactivateMap = function () {
 
   descriptionField.setAttribute('disabled', 'disabled');
   addressInput.value = (BUTTON_COORDINATE_LEFT + (MUFFIN_WIDTH / 2)) + ', ' + (BUTTON_COORDINATE_TOP + (MUFFIN_HEIGHT / 2));
+
+  var filtersForm = document.querySelector('.map__filters');
+  filtersForm.classList.add('map__filters--disabled');
 };
 
 deactivateMap();
