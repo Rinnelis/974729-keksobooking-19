@@ -14,6 +14,7 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 // var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 
+var leftMouseButton = 1;
 var mapPinMain = document.querySelector('.map__pin--main');
 
 // Функции создания рандомных элементов
@@ -118,21 +119,63 @@ filtersContainer.before(cards[0]);
 
 
 // Переход в активный режим и отрисовка указателей на карте
-var activeRegime = function () {
-  var map = document.querySelector('.map');
+var map = document.querySelector('.map');
+var pinElement = document.querySelector('.map__pins');
+var form = document.querySelector('.ad-form');
+var formInputs = form.querySelectorAll('input');
+var formSelects = form.querySelectorAll('select');
+var descriptionField = form.querySelector('#description');
+var addressInput = document.querySelector('#address');
+
+var BUTTON_COORDINATE_LEFT = 570;
+var BUTTON_COORDINATE_TOP = 375;
+var MUFFIN_WIDTH = 40;
+var MUFFIN_HEIGHT = 44;
+var MUFFIN_POINT_HEIGHT = 22;
+
+// Режим деактивации до нажатия на указатель
+var deactivateMap = function () {
+  formInputs.forEach(function (input) {
+    input.setAttribute('disabled', 'disabled');
+  });
+
+  formSelects.forEach(function (select) {
+    select.setAttribute('disabled', 'disabled');
+  });
+
+  descriptionField.setAttribute('disabled', 'disabled');
+  addressInput.value = (BUTTON_COORDINATE_LEFT + (MUFFIN_WIDTH / 2)) + ', ' + (BUTTON_COORDINATE_TOP + (MUFFIN_HEIGHT / 2));
+};
+
+deactivateMap();
+//
+
+var activateMap = function () {
   map.classList.remove('map--faded');
-  var pinElement = document.querySelector('.map__pins');
   pinElement.appendChild(fragment);
+  form.classList.remove('ad-form--disabled');
+  descriptionField.removeAttribute('disabled');
+
+  formInputs.forEach(function (input) {
+    input.removeAttribute('disabled');
+  });
+
+  formSelects.forEach(function (select) {
+    select.removeAttribute('disabled');
+  });
+
+  addressInput.value = (BUTTON_COORDINATE_LEFT + (MUFFIN_WIDTH / 2)) + ', ' + (BUTTON_COORDINATE_TOP + MUFFIN_HEIGHT + MUFFIN_POINT_HEIGHT);
 };
 
 mapPinMain.addEventListener('mousedown', function () {
-  if (event.which === 1) {
-    activeRegime();
+  if (event.which === leftMouseButton) {
+    activateMap();
   }
 });
 
 mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.key === ENTER_KEY) {
-    activeRegime();
+    activateMap();
   }
 });
+
