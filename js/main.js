@@ -13,9 +13,7 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 
 // var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
-
-var leftMouseButton = 1;
-var mapPinMain = document.querySelector('.map__pin--main');
+var LEFT_MOUSE_BUTTON = 1;
 
 // Функции создания рандомных элементов
 function getIntervalNumber(min, max) {
@@ -101,7 +99,7 @@ var renderCard = function (avatar, description) {
   return cardElement;
 };
 
-var cards = [];
+// var cards = [];
 
 // Создание и заполнение фрагмента
 var fragment = document.createDocumentFragment();
@@ -114,24 +112,27 @@ for (var i = 1; i <= CARD_COUNT; i++) {
 }
 
 // Добавляет объявления на карту
-var filtersContainer = document.querySelector('.map__filters-container');
-filtersContainer.before(cards[0]);
+// var filtersContainer = document.querySelector('.map__filters-container');
+// filtersContainer.before(cards[0]);
 
 
 // Переход в активный режим и отрисовка указателей на карте
 var map = document.querySelector('.map');
-var pinElement = document.querySelector('.map__pins');
+var mapPinMain = document.querySelector('.map__pin--main');
+var mapPins = document.querySelector('.map__pins');
 var form = document.querySelector('.ad-form');
 var formInputs = form.querySelectorAll('input');
 var formSelects = form.querySelectorAll('select');
 var descriptionField = form.querySelector('#description');
 var addressInput = document.querySelector('#address');
+var submitButton = form.querySelector('.ad-form__submit');
 
-var BUTTON_COORDINATE_LEFT = 570;
-var BUTTON_COORDINATE_TOP = 375;
+var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
+var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
 var MUFFIN_WIDTH = 40;
 var MUFFIN_HEIGHT = 44;
 var MUFFIN_POINT_HEIGHT = 22;
+
 
 // Режим деактивации до нажатия на указатель
 var deactivateMap = function () {
@@ -144,10 +145,11 @@ var deactivateMap = function () {
   });
 
   descriptionField.setAttribute('disabled', 'disabled');
-  addressInput.value = (BUTTON_COORDINATE_LEFT + (MUFFIN_WIDTH / 2)) + ', ' + (BUTTON_COORDINATE_TOP + (MUFFIN_HEIGHT / 2));
+  addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + (MUFFIN_HEIGHT / 2));
 
   var filtersForm = document.querySelector('.map__filters');
   filtersForm.classList.add('map__filters--disabled');
+  submitButton.setAttribute('disabled', 'disabled');
 };
 
 deactivateMap();
@@ -155,7 +157,7 @@ deactivateMap();
 
 var activateMap = function () {
   map.classList.remove('map--faded');
-  pinElement.appendChild(fragment);
+  mapPins.appendChild(fragment);
   form.classList.remove('ad-form--disabled');
   descriptionField.removeAttribute('disabled');
 
@@ -167,11 +169,11 @@ var activateMap = function () {
     select.removeAttribute('disabled');
   });
 
-  addressInput.value = (BUTTON_COORDINATE_LEFT + (MUFFIN_WIDTH / 2)) + ', ' + (BUTTON_COORDINATE_TOP + MUFFIN_HEIGHT + MUFFIN_POINT_HEIGHT);
+  addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + MUFFIN_HEIGHT + MUFFIN_POINT_HEIGHT);
 };
 
 mapPinMain.addEventListener('mousedown', function () {
-  if (event.which === leftMouseButton) {
+  if (event.which === LEFT_MOUSE_BUTTON) {
     activateMap();
   }
 });
