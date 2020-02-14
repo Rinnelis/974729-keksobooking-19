@@ -232,19 +232,16 @@ roomCapacity.addEventListener('change', getRoomValidation);
 var priceInput = form.querySelector('#price');
 var roomType = form.querySelector('#type');
 
-roomType.addEventListener('change', function (evt) {
-  var minValue = MinPrice[evt.target.value.toUpperCase()];
-  priceInput.min = minValue;
-  priceInput.placeholder = minValue;
-});
-
 var getTypeValidation = function () {
-  var minDefaultValue = MinPrice.FLAT;
+  var minDefaultValue = MinPrice[roomType.value.toUpperCase()];
   priceInput.min = minDefaultValue;
   priceInput.placeholder = minDefaultValue;
 };
 
 getTypeValidation();
+
+roomType.addEventListener('change', getTypeValidation);
+
 
 priceInput.addEventListener('invalid', function () {
   if (priceInput.validity.valueMissing) {
