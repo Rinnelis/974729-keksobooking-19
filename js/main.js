@@ -10,10 +10,30 @@ var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var DESCRIPTIONS = ['описание1', 'описание2', 'описание3', 'описание4', 'описание5', 'описание6', 'описание7', 'описание8'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var MUFFIN_WIDTH = 40;
+var MUFFIN_HEIGHT = 44;
+var MUFFIN_POINT_HEIGHT = 22;
 
 // var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var LEFT_MOUSE_BUTTON = 1;
+
+var map = document.querySelector('.map');
+var mapPinMain = document.querySelector('.map__pin--main');
+var mapPins = document.querySelector('.map__pins');
+var form = document.querySelector('.ad-form');
+var formInputs = form.querySelectorAll('input');
+var formSelects = form.querySelectorAll('select');
+var descriptionField = form.querySelector('#description');
+var addressInput = form.querySelector('#address');
+var submitButton = form.querySelector('.ad-form__submit');
+var filtersForm = document.querySelector('.map__filters');
+var timeIN = form.querySelector('#timein');
+var timeOut = form.querySelector('#timeout');
+
+var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
+var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
+
 
 // Функции создания рандомных элементов
 function getIntervalNumber(min, max) {
@@ -116,24 +136,6 @@ for (var i = 1; i <= CARD_COUNT; i++) {
 // filtersContainer.before(cards[0]);
 
 
-// Переход в активный режим и отрисовка указателей на карте
-var map = document.querySelector('.map');
-var mapPinMain = document.querySelector('.map__pin--main');
-var mapPins = document.querySelector('.map__pins');
-var form = document.querySelector('.ad-form');
-var formInputs = form.querySelectorAll('input');
-var formSelects = form.querySelectorAll('select');
-var descriptionField = form.querySelector('#description');
-var addressInput = document.querySelector('#address');
-var submitButton = form.querySelector('.ad-form__submit');
-
-var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
-var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
-var MUFFIN_WIDTH = 40;
-var MUFFIN_HEIGHT = 44;
-var MUFFIN_POINT_HEIGHT = 22;
-
-
 // Режим деактивации до нажатия на указатель
 var deactivateMap = function () {
   formInputs.forEach(function (input) {
@@ -147,7 +149,6 @@ var deactivateMap = function () {
   descriptionField.setAttribute('disabled', 'disabled');
   addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + (MUFFIN_HEIGHT / 2));
 
-  var filtersForm = document.querySelector('.map__filters');
   filtersForm.classList.add('map__filters--disabled');
   submitButton.setAttribute('disabled', 'disabled');
 };
@@ -155,6 +156,7 @@ var deactivateMap = function () {
 deactivateMap();
 //
 
+// Режим активации карты
 var activateMap = function () {
   map.classList.remove('map--faded');
   mapPins.appendChild(fragment);
@@ -170,8 +172,11 @@ var activateMap = function () {
   });
 
   addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + MUFFIN_HEIGHT + MUFFIN_POINT_HEIGHT);
+  submitButton.removeAttribute('disabled');
+  filtersForm.classList.remove('map__filters--disabled');
 };
 
+// Прорисовка нажатия главного указателя
 mapPinMain.addEventListener('mousedown', function () {
   if (event.which === LEFT_MOUSE_BUTTON) {
     activateMap();
@@ -183,4 +188,76 @@ mapPinMain.addEventListener('keydown', function (evt) {
     activateMap();
   }
 });
+
+// Связь времени чек-ина и чек-аута
+timeIN.addEventListener('change', function (evt) {
+  timeOut.value = evt.target.value;
+});
+
+timeOut.addEventListener('change', function (evt) {
+  timeIN.value = evt.target.value;
+});
+
+// Связь количества комнат и количества гостей
+var roomNumber = document.querySelector('#room_number');
+var roomCapacity = document.querySelector('#capacity');
+
+var getRoomValidation = function () {
+  if (roomNumber.value !== roomCapacity.value) {
+    if (roomNumber.value === '100' && roomCapacity.value !== '0') {
+      roomCapacity.setCustomValidity('Это количество комнат не предназначено для гостей');
+    } else if (roomNumber.value !== '100' && roomCapacity.value === '0') {
+      roomCapacity.setCustomValidity('Пожалуйста, укажите количество гостей');
+    } else if (roomNumber.value < roomCapacity.value) {
+      roomCapacity.setCustomValidity('Количество гостей должно быть не более ' + roomNumber.value);
+    } else {
+      roomCapacity.setCustomValidity('');
+    }
+  }
+};
+
+roomNumber.addEventListener('change', getRoomValidation);
+roomCapacity.addEventListener('change', getRoomValidation);
+
+// Валидация цены за ночь в зависимости от типа жилья
+var priceInput = form.querySelector('#price');
+var roomType = form.querySelector('#type');
+var MinPrice = {
+  BUNGALO: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000
+};
+
+roomType.addEventListener('change', function (evt) {
+  var minValue = MinPrice[evt.target.value.toUpperCase()];
+  priceInput.min = minValue;
+  priceInput.placeholder = minValue;
+});
+
+priceInput.addEventListener('invalid', function () {
+  if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Обязательное поле');
+  } else if (priceInput.validity.typeMismatch) {
+    priceInput.setCustomValidity('В это поле можно вводить только цифры');
+  } else if (priceInput.validity.rangeOverflow) {
+    priceInput.setCustomValidity('Цена не должна превышать 1 000 000');
+  }
+});
+
+// Валидация заголовка объявления
+var titleInput = form.querySelector('#title');
+
+titleInput.addEventListener('invalid', function () {
+  if (titleInput.validity.tooShort) {
+    titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из ' + titleInput.minlength.textContent + ' символов');
+  } else if (titleInput.validity.tooLong) {
+    titleInput.setCustomValidity('Заголовок объявления не должен превышать ' + titleInput.maxlength.textContent + ' символов');
+  } else if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Обязательное поле');
+  } else {
+    titleInput.setCustomValidity('');
+  }
+});
+
 
