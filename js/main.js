@@ -17,6 +17,7 @@ var MUFFIN_POINT_HEIGHT = 22;
 var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var LEFT_MOUSE_BUTTON = 1;
+var BUTTON_TAG_NAME = 'button';
 
 var MinPrice = {
   BUNGALO: 0,
@@ -141,6 +142,7 @@ for (var i = 1; i <= CARD_COUNT; i++) {
   fragment.appendChild(pin);
 }
 
+
 // Добавляет объявления на карту
 var filtersContainer = document.querySelector('.map__filters-container');
 
@@ -148,7 +150,7 @@ pins.forEach(function (tag) {
   tag.addEventListener('click', function (evt) {
     var target = evt.target;
 
-    if (target.tagName.toLowerCase() === 'button') {
+    if (target.tagName.toLowerCase() === BUTTON_TAG_NAME) {
       target = target.children[0];
     }
 
@@ -158,8 +160,8 @@ pins.forEach(function (tag) {
     var card = renderCard(pinAvatar, pinDescription);
     var extraCard = document.querySelector('.popup');
 
-    var onPopupEscPress = function (event) {
-      if (event.key === ESC_KEY) {
+    var onPopupEscPress = function (keyEvt) {
+      if (keyEvt.key === ESC_KEY) {
         closePopup(card);
       }
     };
