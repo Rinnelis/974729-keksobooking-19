@@ -14,9 +14,10 @@ var MUFFIN_WIDTH = 40;
 var MUFFIN_HEIGHT = 44;
 var MUFFIN_POINT_HEIGHT = 22;
 
-// var ESC_KEY = 'Escape';
+var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var LEFT_MOUSE_BUTTON = 1;
+var BUTTON_TAG_NAME = 'button';
 
 var MinPrice = {
   BUNGALO: 0,
@@ -96,51 +97,97 @@ var renderPin = function (avatar, description) {
   return pinElement;
 };
 
+
 // Создание карточки из шаблона
-// var similarCardTemplate = document.querySelector('#card')
-//     .content
-//     .querySelector('.popup');
+var similarCardTemplate = document.querySelector('#card')
+    .content
+    .querySelector('.popup');
 
-// var renderCard = function (avatar, description) {
-//   var cardElement = similarCardTemplate.cloneNode(true);
-//   var features = createFeaturesMarkup();
+var renderCard = function (avatar, description) {
+  var cardElement = similarCardTemplate.cloneNode(true);
+  var features = createFeaturesMarkup();
 
-//   cardElement.querySelector('.popup__avatar').src = avatar;
-//   cardElement.querySelector('.popup__title').textContent = TITLES[getRandomElement(TITLES)];
-//   cardElement.querySelector('.popup__text--address').textContent = getIntervalNumber(350, 600) + ', ' + getIntervalNumber(350, 600);
-//   cardElement.querySelector('.popup__text--price').textContent = PRICES[getRandomElement(PRICES)] + ' ₽/ночь';
-//   cardElement.querySelector('.popup__type').textContent = TYPES[getRandomElement(TYPES)];
-//   cardElement.querySelector('.popup__text--capacity').textContent = ROOMS[getRandomElement(ROOMS)] + ' комнаты для ' + GUESTS[getRandomElement(GUESTS)] + ' гостей';
-//   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + TIMES[getRandomElement(TIMES)] + ', выезд до ' + TIMES[getRandomElement(TIMES)];
+  cardElement.querySelector('.popup__avatar').src = avatar;
+  cardElement.querySelector('.popup__title').textContent = TITLES[getRandomElement(TITLES)];
+  cardElement.querySelector('.popup__text--address').textContent = getIntervalNumber(350, 600) + ', ' + getIntervalNumber(350, 600);
+  cardElement.querySelector('.popup__text--price').textContent = PRICES[getRandomElement(PRICES)] + ' ₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = TYPES[getRandomElement(TYPES)];
+  cardElement.querySelector('.popup__text--capacity').textContent = ROOMS[getRandomElement(ROOMS)] + ' комнаты для ' + GUESTS[getRandomElement(GUESTS)] + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + TIMES[getRandomElement(TIMES)] + ', выезд до ' + TIMES[getRandomElement(TIMES)];
 
-//   var featuresList = cardElement.querySelector('.popup__features');
-//   emptyFeatureList(featuresList);
+  var featuresList = cardElement.querySelector('.popup__features');
+  emptyFeatureList(featuresList);
 
-//   for (var i = 0; i < features.length; i++) {
-//     featuresList.appendChild(features[i]);
-//   }
+  for (var i = 0; i < features.length; i++) {
+    featuresList.appendChild(features[i]);
+  }
 
-//   cardElement.querySelector('.popup__description').textContent = description;
-//   cardElement.querySelector('.popup__photo').src = PHOTOS[getRandomElement(PHOTOS)];
+  cardElement.querySelector('.popup__description').textContent = description;
+  cardElement.querySelector('.popup__photo').src = PHOTOS[getRandomElement(PHOTOS)];
 
-//   return cardElement;
-// };
+  return cardElement;
+};
 
-// var cards = [];
+var pins = [];
 
 // Создание и заполнение фрагмента
 var fragment = document.createDocumentFragment();
 for (var i = 1; i <= CARD_COUNT; i++) {
   var advertDescription = DESCRIPTIONS[i - 1];
   var image = makeAvatar(i);
-  // var card = renderCard(image, advertDescription); <== отменяет отрисовку карточки !!!
-  // cards.push(card);
-  fragment.appendChild(renderPin(image, advertDescription));
+
+  var pin = renderPin(image, advertDescription);
+  pins.push(pin);
+
+  fragment.appendChild(pin);
 }
 
+
 // Добавляет объявления на карту
-// var filtersContainer = document.querySelector('.map__filters-container');
-// filtersContainer.before(cards[0]);
+var filtersContainer = document.querySelector('.map__filters-container');
+
+pins.forEach(function (tag) {
+  tag.addEventListener('click', function (evt) {
+    var target = evt.target;
+
+    if (target.tagName.toLowerCase() === BUTTON_TAG_NAME) {
+      target = target.children[0];
+    }
+
+    var pinAvatar = target.src;
+    var pinDescription = target.alt;
+
+    var card = renderCard(pinAvatar, pinDescription);
+    var extraCard = document.querySelector('.popup');
+
+    var onPopupEscPress = function (keyEvt) {
+      if (keyEvt.key === ESC_KEY) {
+        closePopup(card);
+      }
+    };
+
+    var closePopup = function (cardElement) {
+      cardElement.remove();
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
+
+    if (extraCard) {
+      closePopup(extraCard);
+    }
+
+    var popupCloseButton = card.querySelector('.popup__close');
+
+    popupCloseButton.addEventListener('mousedown', function () {
+      if (event.which === LEFT_MOUSE_BUTTON) {
+        closePopup(card);
+      }
+    });
+
+    document.addEventListener('keydown', onPopupEscPress);
+
+    filtersContainer.before(card);
+  });
+});
 
 
 // Режим деактивации до нажатия на указатель
