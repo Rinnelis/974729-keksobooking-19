@@ -127,7 +127,6 @@ var renderCard = function (avatar, description) {
   return cardElement;
 };
 
-var cards = [];
 var pins = [];
 
 // Создание и заполнение фрагмента
@@ -135,9 +134,6 @@ var fragment = document.createDocumentFragment();
 for (var i = 1; i <= CARD_COUNT; i++) {
   var advertDescription = DESCRIPTIONS[i - 1];
   var image = makeAvatar(i);
-
-  var card = renderCard(image, advertDescription);
-  cards.push(card);
 
   var pin = renderPin(image, advertDescription);
   pins.push(pin);
@@ -152,20 +148,19 @@ pins.forEach(function (tag) {
   tag.addEventListener('click', function (evt) {
     var target = evt.target;
 
-    if (evt.target.tagName === 'button') {
-      target.tagName.toLowerCase();
+    if (target.tagName.toLowerCase() === 'button') {
       target = target.children[0];
     }
 
     var pinAvatar = target.src;
     var pinDescription = target.alt;
 
-    var pinAdvert = renderCard(pinAvatar, pinDescription);
+    var card = renderCard(pinAvatar, pinDescription);
     var extraCard = document.querySelector('.popup');
 
     var onPopupEscPress = function (event) {
       if (event.key === ESC_KEY) {
-        closePopup(pinAdvert);
+        closePopup(card);
       }
     };
 
@@ -175,20 +170,20 @@ pins.forEach(function (tag) {
     };
 
     if (extraCard) {
-      closePopup(pinAdvert);
+      closePopup(extraCard);
     }
 
-    var popupCloseButton = pinAdvert.querySelector('.popup__close');
+    var popupCloseButton = card.querySelector('.popup__close');
 
     popupCloseButton.addEventListener('mousedown', function () {
       if (event.which === LEFT_MOUSE_BUTTON) {
-        closePopup(pinAdvert);
+        closePopup(card);
       }
     });
 
     document.addEventListener('keydown', onPopupEscPress);
 
-    filtersContainer.before(pinAdvert);
+    filtersContainer.before(card);
   });
 });
 
