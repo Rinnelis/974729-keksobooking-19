@@ -41,12 +41,10 @@
   deactivateMap();
   //
 
-  var fragment = document.createDocumentFragment();
-
   // Режим активации карты
   var activateMap = function () {
     map.classList.remove('map--faded');
-    mapPins.appendChild(fragment);
+    mapPins.appendChild(window.fragment);
     form.classList.remove('ad-form--disabled');
     descriptionField.removeAttribute('disabled');
 

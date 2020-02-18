@@ -57,7 +57,7 @@
 
   roomType.addEventListener('change', getTypeValidation);
 
-  priceInput.addEventListener('invalid', function () {
+  priceInput.addEventListener('change', function () {
     if (priceInput.validity.valueMissing) {
       priceInput.setCustomValidity('Обязательное поле');
     } else if (priceInput.validity.typeMismatch) {
@@ -72,7 +72,7 @@
   // Валидация заголовка объявления
   var titleInput = form.querySelector('#title');
 
-  titleInput.addEventListener('invalid', function () {
+  titleInput.addEventListener('change', function () {
     if (titleInput.validity.tooShort) {
       titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
     } else if (titleInput.validity.tooLong) {
