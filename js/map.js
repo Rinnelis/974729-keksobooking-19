@@ -5,8 +5,6 @@
   var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
 
-  // var LEFT_MOUSE_BUTTON = 1;
-
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPins = document.querySelector('.map__pins');
@@ -56,20 +54,12 @@
       select.removeAttribute('disabled');
     });
 
-    addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + MUFFIN_HEIGHT + MUFFIN_POINT_HEIGHT);
+    addressInput.value = window.pinX + ', ' + (window.pinY + MUFFIN_POINT_HEIGHT);
     submitButton.removeAttribute('disabled');
     filtersForm.classList.remove('map__filters--disabled');
   };
 
-
-  // Прорисовка нажатия главного указателя
-  // mapPinMain.addEventListener('mousedown', function () {
-  //   if (event.which === LEFT_MOUSE_BUTTON) {
-  //     window.activateMap();
-  //   }
-  // });
-
-  // mapPinMain.addEventListener('keydown', function (evt) {
-  //   window.util.isEnterEvent(evt, window.activateMap);
-  // });
+  mapPinMain.addEventListener('keydown', function (keyEvt) {
+    window.util.isEnterEvent(keyEvt, window.activateMap);
+  });
 })();
