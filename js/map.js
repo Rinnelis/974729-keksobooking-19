@@ -5,7 +5,7 @@
   var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
 
-  var LEFT_MOUSE_BUTTON = 1;
+  // var LEFT_MOUSE_BUTTON = 1;
 
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -42,7 +42,7 @@
   //
 
   // Режим активации карты
-  var activateMap = function () {
+  window.activateMap = function () {
     map.classList.remove('map--faded');
     mapPins.appendChild(window.fragment);
     form.classList.remove('ad-form--disabled');
@@ -61,14 +61,15 @@
     filtersForm.classList.remove('map__filters--disabled');
   };
 
-  // Прорисовка нажатия главного указателя
-  mapPinMain.addEventListener('mousedown', function () {
-    if (event.which === LEFT_MOUSE_BUTTON) {
-      activateMap();
-    }
-  });
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, activateMap);
-  });
+  // Прорисовка нажатия главного указателя
+  // mapPinMain.addEventListener('mousedown', function () {
+  //   if (event.which === LEFT_MOUSE_BUTTON) {
+  //     window.activateMap();
+  //   }
+  // });
+
+  // mapPinMain.addEventListener('keydown', function (evt) {
+  //   window.util.isEnterEvent(evt, window.activateMap);
+  // });
 })();
