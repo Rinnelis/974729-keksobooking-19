@@ -3,6 +3,7 @@
 (function () {
   var MUFFIN_WIDTH = 40;
   var MUFFIN_HEIGHT = 44;
+  var MUFFIN_POINT_HEIGHT = 22;
 
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -18,6 +19,12 @@
   var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
   var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
 
+  window.getPinCoords = function (x, y, pointer) {
+    var coordX = x + (MUFFIN_WIDTH / 2);
+    var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
+    return coordX + ', ' + coordY;
+  };
+
   // Режим деактивации до нажатия на указатель
   var deactivateMap = function () {
     formInputs.forEach(function (input) {
@@ -29,7 +36,7 @@
     });
 
     descriptionField.setAttribute('disabled', 'disabled');
-    addressInput.value = (buttonCoordinateLeft + (MUFFIN_WIDTH / 2)) + ', ' + (buttonCoordinateTop + (MUFFIN_HEIGHT / 2));
+    addressInput.value = window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
 
     filtersForm.classList.add('map__filters--disabled');
     submitButton.setAttribute('disabled', 'disabled');
@@ -53,14 +60,13 @@
       select.removeAttribute('disabled');
     });
 
-    addressInput.value = window.pin.x + ', ' + window.pin.y;
+    addressInput.value = window.getPinCoords(window.pin.x, window.pin.y, MUFFIN_POINT_HEIGHT);
     submitButton.removeAttribute('disabled');
     filtersForm.classList.remove('map__filters--disabled');
   };
 
-  mapPinMain.addEventListener('keydown', function (keyEvt) {
-    if (window.util.isEnterEvent(keyEvt)) {
-      window.activateMap();
-    }
+  mapPinMain.addEventListener('click', function () {
+    addressInput.value = window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+    window.activateMap();
   });
 })();

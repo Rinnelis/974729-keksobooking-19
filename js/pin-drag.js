@@ -1,18 +1,11 @@
 'use strict';
 
 (function () {
-  var MUFFIN_WIDTH = 40;
-  var MUFFIN_HEIGHT = 44;
-  var MUFFIN_POINT_HEIGHT = 22;
-
   var pinHandler = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var minLeftBorder = 0;
   var minTopBorder = 108;
   var minBottomBorder = 608;
-
-  var x;
-  var y;
 
   pinHandler.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -51,12 +44,9 @@
         pinHandler.style.top = newY + 'px';
       }
 
-      x = newX + (MUFFIN_WIDTH / 2);
-      y = newY + (MUFFIN_HEIGHT / 2) + MUFFIN_POINT_HEIGHT;
-
       window.pin = {
-        x: x,
-        y: y
+        x: newX,
+        y: newY
       };
     };
 
@@ -67,9 +57,9 @@
       document.removeEventListener('mouseup', onPinUp);
       pinHandler.addEventListener('click', window.activateMap);
 
-      if (dragged) {
-        // статичные координаты
-      }
+      // if (dragged) {
+
+      // }
     };
 
     document.addEventListener('mousemove', onPinMove);
