@@ -3,7 +3,6 @@
 (function () {
   var MUFFIN_WIDTH = 40;
   var MUFFIN_HEIGHT = 44;
-  var MUFFIN_POINT_HEIGHT = 22;
 
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -54,12 +53,14 @@
       select.removeAttribute('disabled');
     });
 
-    addressInput.value = window.pinX + ', ' + (window.pinY + MUFFIN_POINT_HEIGHT);
+    addressInput.value = window.pin.x + ', ' + window.pin.y;
     submitButton.removeAttribute('disabled');
     filtersForm.classList.remove('map__filters--disabled');
   };
 
   mapPinMain.addEventListener('keydown', function (keyEvt) {
-    window.util.isEnterEvent(keyEvt, window.activateMap);
+    if (window.util.isEnterEvent(keyEvt)) {
+      window.activateMap();
+    }
   });
 })();

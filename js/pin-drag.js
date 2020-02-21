@@ -1,12 +1,18 @@
 'use strict';
 
 (function () {
-
   var MUFFIN_WIDTH = 40;
   var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
 
   var pinHandler = document.querySelector('.map__pin--main');
+  var map = document.querySelector('.map');
+  var minLeftBorder = 0;
+  var minTopBorder = 108;
+  var minBottomBorder = 608;
+
+  var x;
+  var y;
 
   pinHandler.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -32,23 +38,26 @@
         y: moveEvt.clientY
       };
 
-      pinHandler.style.top = (pinHandler.offsetTop - shift.y) + 'px';
-      pinHandler.style.left = (pinHandler.offsetLeft - shift.x) + 'px';
+      var mapWidth = map.getBoundingClientRect().width;
+      var pinWidth = pinHandler.offsetWidth;
+      var newX = pinHandler.offsetLeft - shift.x;
+      var newY = pinHandler.offsetTop - shift.y;
 
-      window.pinX = pinHandler.offsetLeft + (MUFFIN_WIDTH / 2);
-      window.pinY = pinHandler.offsetTop + (MUFFIN_HEIGHT / 2);
-
-      if (window.pinX > 1150) {
-        window.pinX = 1150;
-      } else if (window.pinX < 1) {
-        window.pinX = 0;
+      if (newX > minLeftBorder && newX <= (mapWidth - pinWidth)) {
+        pinHandler.style.left = newX + 'px';
       }
 
-      if (window.pinY > 609) {
-        window.pinY = 608;
-      } else if (window.pinY < 109) {
-        window.pinY = 108;
+      if (newY > minTopBorder && newY < minBottomBorder) {
+        pinHandler.style.top = newY + 'px';
       }
+
+      x = newX + (MUFFIN_WIDTH / 2);
+      y = newY + (MUFFIN_HEIGHT / 2) + MUFFIN_POINT_HEIGHT;
+
+      window.pin = {
+        x: x,
+        y: y
+      };
     };
 
     var onPinUp = function (upEvt) {
@@ -58,15 +67,8 @@
       document.removeEventListener('mouseup', onPinUp);
       pinHandler.addEventListener('click', window.activateMap);
 
-      if (!dragged) {
-        var onClickPrevent = function (clickEvt) {
-          clickEvt.preventDefault();
-          pinHandler.removeEventListener('click', onClickPrevent);
-        };
-        pinHandler.addEventListener('click', onClickPrevent);
-
-        window.pinX = pinHandler.offsetLeft + (MUFFIN_WIDTH / 2);
-        window.pinY = pinHandler.offsetTop + (MUFFIN_HEIGHT / 2) + MUFFIN_POINT_HEIGHT;
+      if (dragged) {
+        // статичные координаты
       }
     };
 

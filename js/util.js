@@ -9,16 +9,12 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
 
-    isEscEvent: function (evt, action) {
-      if (evt.key === ESC_KEY) {
-        action();
-      }
+    isEscEvent: function (evt) {
+      return evt.key === ESC_KEY;
     },
 
-    isEnterEvent: function (evt, action) {
-      if (evt.key === ENTER_KEY) {
-        action();
-      }
+    isEnterEvent: function (evt) {
+      return evt.key === ENTER_KEY;
     }
   };
 })();

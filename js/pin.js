@@ -62,7 +62,9 @@
       var extraCard = document.querySelector('.popup');
 
       var onPopupEscPress = function (keyEvt) {
-        window.util.isEscEvent(keyEvt, closePopup(card));
+        if (window.util.isEscEvent(keyEvt)) {
+          closePopup(card);
+        }
       };
 
       var closePopup = function (cardElement) {
