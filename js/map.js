@@ -12,7 +12,6 @@
   var formInputs = form.querySelectorAll('input');
   var formSelects = form.querySelectorAll('select');
   var descriptionField = form.querySelector('#description');
-  var addressInput = form.querySelector('#address');
   var submitButton = form.querySelector('.ad-form__submit');
   var filtersForm = document.querySelector('.map__filters');
 
@@ -22,7 +21,9 @@
   window.getPinCoords = function (x, y, pointer) {
     var coordX = x + (MUFFIN_WIDTH / 2);
     var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
-    return coordX + ', ' + coordY;
+
+    var addressInput = document.querySelector('#address');
+    addressInput.value = coordX + ', ' + coordY;
   };
 
   // Режим деактивации до нажатия на указатель
@@ -36,7 +37,7 @@
     });
 
     descriptionField.setAttribute('disabled', 'disabled');
-    addressInput.value = window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
+    window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
 
     filtersForm.classList.add('map__filters--disabled');
     submitButton.setAttribute('disabled', 'disabled');
@@ -60,13 +61,17 @@
       select.removeAttribute('disabled');
     });
 
-    addressInput.value = window.getPinCoords(window.pin.x, window.pin.y, MUFFIN_POINT_HEIGHT);
     submitButton.removeAttribute('disabled');
     filtersForm.classList.remove('map__filters--disabled');
   };
 
   mapPinMain.addEventListener('click', function () {
-    addressInput.value = window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
     window.activateMap();
+  });
+
+  mapPinMain.addEventListener('keydown', function (keyEvt) {
+    if (window.util.isEnterEvent(keyEvt)) {
+      window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+    }
   });
 })();
