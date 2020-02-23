@@ -48,7 +48,7 @@
 
     cardElement.querySelector('.popup__avatar').src = avatar;
     cardElement.querySelector('.popup__title').textContent = TITLES[getRandomElement(TITLES)];
-    cardElement.querySelector('.popup__text--address').textContent = window.util.getIntervalNumber(350, 600) + ', ' + window.util.getIntervalNumber(350, 600);
+    cardElement.querySelector('.popup__text--address').textContent = window.util.getIntervalNumber(250, 1000) + ', ' + window.util.getIntervalNumber(130, 630);
     cardElement.querySelector('.popup__text--price').textContent = PRICES[getRandomElement(PRICES)] + ' ₽/ночь';
     cardElement.querySelector('.popup__type').textContent = TYPES[getRandomElement(TYPES)];
     cardElement.querySelector('.popup__text--capacity').textContent = ROOMS[getRandomElement(ROOMS)] + ' комнаты для ' + GUESTS[getRandomElement(GUESTS)] + ' гостей';

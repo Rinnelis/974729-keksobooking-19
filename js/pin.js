@@ -20,9 +20,9 @@
   var renderPin = function (avatar, description) {
     var pinElement = pinTemplate.cloneNode(true);
     var pinXTransfer = 10; // случайное число
-    var pinУTransfer = 20; // случайное число
+    var pinУTransfer = 10; // случайное число
 
-    pinElement.style = 'left: ' + (window.util.getIntervalNumber(350, 600) + pinXTransfer) + 'px; top: ' + (window.util.getIntervalNumber(350, 600) + pinУTransfer) + 'px;';
+    pinElement.style = 'left: ' + (window.util.getIntervalNumber(0, 1100) + pinXTransfer) + 'px; top: ' + (window.util.getIntervalNumber(130, 620) + pinУTransfer) + 'px;';
     pinElement.querySelector('img').src = avatar;
     pinElement.querySelector('img').alt = description;
     return pinElement;
@@ -62,7 +62,9 @@
       var extraCard = document.querySelector('.popup');
 
       var onPopupEscPress = function (keyEvt) {
-        window.util.isEscEvent(keyEvt, closePopup(card));
+        if (window.util.isEscEvent(keyEvt)) {
+          closePopup(card);
+        }
       };
 
       var closePopup = function (cardElement) {
