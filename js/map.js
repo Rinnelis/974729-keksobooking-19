@@ -49,7 +49,7 @@
   // Режим активации карты
   window.activateMap = function () {
     map.classList.remove('map--faded');
-    mapPins.appendChild(window.fragment);
+    mapPins.appendChild(window.pinFragment);
     form.classList.remove('ad-form--disabled');
     descriptionField.removeAttribute('disabled');
 
