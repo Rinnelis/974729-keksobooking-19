@@ -70,10 +70,10 @@
   // Создание карточки из шаблона
   var similarCardTemplate = document.querySelector('#card').content;
 
-  window.renderCard = function (card) {
+  window.renderCard = function (card, avatar) {
     var cardElement = similarCardTemplate.cloneNode(true);
 
-    cardElement.querySelector('.popup__avatar').src = card.author.avatar;
+    cardElement.querySelector('.popup__avatar').src = avatar;
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = card.offer.price;

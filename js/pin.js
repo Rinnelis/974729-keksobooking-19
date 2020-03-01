@@ -92,10 +92,9 @@
 
   var BUTTON_TAG_NAME = 'button';
   var LEFT_MOUSE_BUTTON = 1;
-  var CARD_COUNT = 8;
 
   // Создание элемента указателя по шаблону
-  var pinTemplate = document.querySelector('#pin').content;
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var renderPin = function (card) {
     var pinElement = pinTemplate.cloneNode(true);
@@ -108,18 +107,61 @@
   };
 
   var pins = [];
+  var filtersContainer = document.querySelector('.map__filters-container');
 
   // Создание и заполнение фрагмента
   var successHandler = function (cards) {
     var pinFragment = document.createDocumentFragment();
     window.pinFragment = pinFragment;
 
-    for (var i = 0; i < CARD_COUNT; i++) {
+    for (var i = 0; i < cards.length; i++) {
       var pin = renderPin(cards[i]);
       pins.push(pin);
 
       pinFragment.appendChild(pin);
     }
+
+    pins.forEach(function (tag) {
+      tag.addEventListener('click', function (evt) {
+        var target = evt.target;
+
+        if (target.tagName.toLowerCase() === BUTTON_TAG_NAME) {
+          target = target.children[0];
+        }
+
+        var pinAvatar = target.src;
+
+        var card = window.renderCard(cards[i], pinAvatar);
+        var extraCard = document.querySelector('.popup');
+
+        var onPopupEscPress = function (keyEvt) {
+          if (window.util.isEscEvent(keyEvt)) {
+            closePopup(card);
+          }
+        };
+
+        var closePopup = function (cardElement) {
+          cardElement.remove();
+          document.removeEventListener('keydown', onPopupEscPress);
+        };
+
+        if (extraCard) {
+          closePopup(extraCard);
+        }
+
+        var popupCloseButton = card.querySelector('.popup__close');
+
+        popupCloseButton.addEventListener('mousedown', function () {
+          if (event.which === LEFT_MOUSE_BUTTON) {
+            closePopup(card);
+          }
+        });
+
+        document.addEventListener('keydown', onPopupEscPress);
+
+        filtersContainer.before(card);
+      });
+    });
   };
 
   var errorHandler = function (errorMessage) {
@@ -135,50 +177,4 @@
   };
 
   window.load(successHandler, errorHandler);
-
-  // Добавляет объявления на карту
-  var filtersContainer = document.querySelector('.map__filters-container');
-
-  pins.forEach(function (tag) {
-    tag.addEventListener('click', function (evt) {
-      var target = evt.target;
-
-      if (target.tagName.toLowerCase() === BUTTON_TAG_NAME) {
-        target = target.children[0];
-      }
-
-      // var pinAvatar = target.src;
-      // var pinDescription = target.alt;
-
-      var card = window.renderCard(pinAvatar, pinDescription);
-      var extraCard = document.querySelector('.popup');
-
-      var onPopupEscPress = function (keyEvt) {
-        if (window.util.isEscEvent(keyEvt)) {
-          closePopup(card);
-        }
-      };
-
-      var closePopup = function (cardElement) {
-        cardElement.remove();
-        document.removeEventListener('keydown', onPopupEscPress);
-      };
-
-      if (extraCard) {
-        closePopup(extraCard);
-      }
-
-      var popupCloseButton = card.querySelector('.popup__close');
-
-      popupCloseButton.addEventListener('mousedown', function () {
-        if (event.which === LEFT_MOUSE_BUTTON) {
-          closePopup(card);
-        }
-      });
-
-      document.addEventListener('keydown', onPopupEscPress);
-
-      filtersContainer.before(card);
-    });
-  });
 })();
