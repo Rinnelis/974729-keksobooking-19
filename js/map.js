@@ -27,7 +27,7 @@
     });
 
     descriptionField.setAttribute('disabled', 'disabled');
-    window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
+    window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
 
     filtersForm.classList.add('map__filters--disabled');
     submitButton.setAttribute('disabled', 'disabled');
@@ -61,7 +61,7 @@
 
   mapPinMain.addEventListener('keydown', function (keyEvt) {
     if (window.util.isEnterEvent(keyEvt)) {
-      window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+      window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
     }
   });
 

@@ -18,7 +18,6 @@
     return pinElement;
   };
 
-  var pins = [];
   var filtersContainer = document.querySelector('.map__filters-container');
 
   // Создание и заполнение фрагмента
@@ -28,7 +27,6 @@
 
     cards.forEach(function (cardUnit) {
       var pin = renderPin(cardUnit);
-      pins.push(pin);
       var card = window.renderCard(cardUnit);
 
       pinFragment.appendChild(pin);
@@ -81,11 +79,17 @@
 
   window.backend.load(successHandler, errorHandler);
 
-  window.getPinCoords = function (x, y, pointer) {
+  var getPinCoords = function (x, y, pointer) {
     var coordX = x + (MUFFIN_WIDTH / 2);
     var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
 
     var addressInput = document.querySelector('#address');
     addressInput.value = coordX + ', ' + coordY;
+  };
+
+  window.pin = {
+    getCoords: getPinCoords,
+    success: successHandler,
+    error: errorHandler
   };
 })();

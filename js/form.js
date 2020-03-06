@@ -159,6 +159,7 @@
       form.classList.add('ad-form--disabled');
       window.map.deactivate();
       submitButton.textContent = 'Опубликовать';
+      window.backend.load(window.pin.success, window.pin.error);
     };
 
     var errorSend = function () {

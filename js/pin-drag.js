@@ -48,7 +48,7 @@
         pinHandler.style.top = newY + 'px';
       }
 
-      window.getPinCoords(newX, newY, MUFFIN_POINT_HEIGHT);
+      window.pin.getCoords(newX, newY, MUFFIN_POINT_HEIGHT);
     };
 
     var onPinUp = function (upEvt) {
@@ -58,7 +58,7 @@
       document.removeEventListener('mouseup', onPinUp);
 
       if (!dragged) {
-        window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+        window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
       }
     };
 
