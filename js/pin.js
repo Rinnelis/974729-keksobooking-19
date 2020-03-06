@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-  var BUTTON_TAG_NAME = 'button';
+  var MUFFIN_WIDTH = 40;
+  var MUFFIN_HEIGHT = 44;
   var LEFT_MOUSE_BUTTON = 1;
 
   // Создание элемента указателя по шаблону
@@ -25,20 +26,14 @@
     var pinFragment = document.createDocumentFragment();
     window.pinFragment = pinFragment;
 
-    cards.forEach(function (cardExample) {
-      var pin = renderPin(cardExample);
+    cards.forEach(function (cardUnit) {
+      var pin = renderPin(cardUnit);
       pins.push(pin);
-      var card = window.renderCard(cardExample);
+      var card = window.renderCard(cardUnit);
 
       pinFragment.appendChild(pin);
 
-      pin.addEventListener('click', function (evt) {
-        var target = evt.target;
-
-        if (target.tagName.toLowerCase() === BUTTON_TAG_NAME) {
-          target = target.children[0];
-        }
-
+      pin.addEventListener('click', function () {
         var extraCard = document.querySelector('.popup');
 
         var onPopupEscPress = function (keyEvt) {
@@ -84,5 +79,13 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.load(successHandler, errorHandler);
+  window.backend.load(successHandler, errorHandler);
+
+  window.getPinCoords = function (x, y, pointer) {
+    var coordX = x + (MUFFIN_WIDTH / 2);
+    var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
+
+    var addressInput = document.querySelector('#address');
+    addressInput.value = coordX + ', ' + coordY;
+  };
 })();

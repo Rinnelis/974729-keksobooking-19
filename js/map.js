@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var MUFFIN_WIDTH = 40;
-  var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
 
   var map = document.querySelector('.map');
@@ -17,14 +15,6 @@
 
   var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
   var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
-
-  window.getPinCoords = function (x, y, pointer) {
-    var coordX = x + (MUFFIN_WIDTH / 2);
-    var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
-
-    var addressInput = document.querySelector('#address');
-    addressInput.value = coordX + ', ' + coordY;
-  };
 
   // Режим деактивации до нажатия на указатель
   var deactivateMap = function () {
@@ -47,7 +37,7 @@
   //
 
   // Режим активации карты
-  window.activateMap = function () {
+  var activateMap = function () {
     map.classList.remove('map--faded');
     mapPins.appendChild(window.pinFragment);
     form.classList.remove('ad-form--disabled');
@@ -66,7 +56,7 @@
   };
 
   mapPinMain.addEventListener('click', function () {
-    window.activateMap();
+    window.map.activate();
   });
 
   mapPinMain.addEventListener('keydown', function (keyEvt) {
@@ -74,4 +64,9 @@
       window.getPinCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
     }
   });
+
+  window.map = {
+    activate: activateMap,
+    deactivate: deactivateMap
+  };
 })();

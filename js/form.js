@@ -4,12 +4,21 @@
   var form = document.querySelector('.ad-form');
   var timeIN = form.querySelector('#timein');
   var timeOut = form.querySelector('#timeout');
+  var resetButton = form.querySelector('.ad-form__reset');
+  var map = document.querySelector('.map');
+  var mainPin = map.querySelector('.map__pin--main');
+
   var MinPrice = {
     BUNGALO: 0,
     FLAT: 1000,
     HOUSE: 5000,
     PALACE: 10000
   };
+
+  // Очистка формы
+  resetButton.addEventListener('click', function () {
+    form.reset();
+  });
 
   // Связь времени чек-ина и чек-аута
   timeIN.addEventListener('change', function (evt) {
@@ -82,5 +91,81 @@
     } else {
       titleInput.setCustomValidity('');
     }
+  });
+
+  // Показ сообщения об успешной подаче объявления
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
+  var renderSuccessMessage = function () {
+    var successMessage = successTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    var success = fragment.appendChild(successMessage);
+
+    var closeMessage = function (keyEvt) {
+      if (window.util.isEscEvent(keyEvt)) {
+        success.classList.add('hidden');
+      }
+    };
+
+    document.addEventListener('keydown', closeMessage);
+    document.addEventListener('click', function () {
+      success.classList.add('hidden');
+    });
+    return success;
+  };
+
+  // Показ сообщения об ошибке при размещении объявления
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+  var renderErrorMessage = function () {
+    var errorMessage = errorTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    var error = fragment.appendChild(errorMessage);
+    var errorButton = errorTemplate.querySelector('.error__button');
+
+    errorButton.addEventListener('click', function () {
+      error.classList.add('hidden');
+    });
+
+    var closeMessage = function (keyEvt) {
+      if (window.util.isEscEvent(keyEvt)) {
+        error.classList.add('hidden');
+      }
+    };
+
+    document.addEventListener('keydown', closeMessage);
+    document.addEventListener('click', function () {
+      error.classList.add('hidden');
+    });
+    return error;
+  };
+
+  // Отправка данных формы на сервер
+  form.addEventListener('submit', function (evt) {
+    var submitButton = form.querySelector('.ad-form__submit');
+    submitButton.textContent = 'Публикуем...';
+    submitButton.disabled = true;
+
+    var successfulSend = function () {
+      mainPin.style.left = 570 + 'px';
+      mainPin.style.top = 375 + 'px';
+      // var pin = map.querySelectorAll('.map__pin');
+      // pin.classList.add('hidden');
+      map.before(renderSuccessMessage());
+      map.classList.add('map--faded');
+      form.reset();
+      form.classList.add('ad-form--disabled');
+      window.map.deactivate();
+      submitButton.textContent = 'Опубликовать';
+    };
+
+    var errorSend = function () {
+      submitButton.textContent = 'Опубликовать';
+      submitButton.disabled = false;
+      map.before(renderErrorMessage());
+    };
+
+    window.backend.save(new FormData(form), successfulSend, errorSend);
+    evt.preventDefault();
   });
 })();
