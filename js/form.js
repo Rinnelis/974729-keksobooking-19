@@ -6,7 +6,6 @@
   var timeOut = form.querySelector('#timeout');
   var resetButton = form.querySelector('.ad-form__reset');
   var map = document.querySelector('.map');
-  var mainPin = map.querySelector('.map__pin--main');
 
   var MinPrice = {
     BUNGALO: 0,
@@ -17,7 +16,9 @@
 
   // Очистка формы
   resetButton.addEventListener('click', function () {
-    form.reset();
+    window.map.reset();
+    form.classList.add('ad-form--disabled');
+    window.backend.load(window.pin.success, window.pin.error);
   });
 
   // Связь времени чек-ина и чек-аута
@@ -145,19 +146,10 @@
     submitButton.disabled = true;
 
     var successfulSend = function () {
-      mainPin.style.left = 570 + 'px';
-      mainPin.style.top = 375 + 'px';
-      var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-
-      pins.forEach(function (pin) {
-        pin.remove();
-      });
-
+      window.map.reset();
       map.before(renderSuccessMessage());
-      map.classList.add('map--faded');
       form.reset();
       form.classList.add('ad-form--disabled');
-      window.map.deactivate();
       submitButton.textContent = 'Опубликовать';
       window.backend.load(window.pin.success, window.pin.error);
     };
