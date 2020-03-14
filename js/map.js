@@ -65,8 +65,24 @@
     }
   });
 
+  var resetMap = function () {
+    mapPinMain.style.left = 570 + 'px';
+    mapPinMain.style.top = 375 + 'px';
+    var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+
+    var popup = map.querySelector('.popup');
+    popup.remove();
+    map.classList.add('map--faded');
+    deactivateMap();
+  };
+
   window.map = {
     activate: activateMap,
-    deactivate: deactivateMap
+    deactivate: deactivateMap,
+    reset: resetMap
   };
 })();
