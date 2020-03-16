@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var ZERO_GUESTS = 0;
+  var HUNDRED_ROOMS = 100;
+
   var form = document.querySelector('.ad-form');
   var timeIN = form.querySelector('#timein');
   var timeOut = form.querySelector('#timeout');
@@ -15,10 +18,11 @@
   };
 
   // Очистка формы
-  resetButton.addEventListener('click', function () {
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    form.reset();
     window.map.reset();
     form.classList.add('ad-form--disabled');
-    window.backend.load(window.pin.success, window.pin.error);
   });
 
   // Связь времени чек-ина и чек-аута
@@ -35,9 +39,9 @@
   var roomCapacity = document.querySelector('#capacity');
 
   var getRoomValidation = function () {
-    if (roomNumber.value === '100' && roomCapacity.value !== '0') {
+    if (roomNumber.value === HUNDRED_ROOMS && roomCapacity.value !== ZERO_GUESTS) {
       roomCapacity.setCustomValidity('Это количество комнат не предназначено для гостей');
-    } else if (roomNumber.value !== '100' && roomCapacity.value === '0') {
+    } else if (roomNumber.value !== HUNDRED_ROOMS && roomCapacity.value === ZERO_GUESTS) {
       roomCapacity.setCustomValidity('Пожалуйста, укажите количество гостей');
     } else if (roomNumber.value < roomCapacity.value) {
       roomCapacity.setCustomValidity('Количество гостей должно быть не более ' + roomNumber.value);
@@ -146,9 +150,9 @@
     submitButton.disabled = true;
 
     var successfulSend = function () {
+      form.reset();
       window.map.reset();
       map.before(renderSuccessMessage());
-      form.reset();
       form.classList.add('ad-form--disabled');
       submitButton.textContent = 'Опубликовать';
       window.backend.load(window.pin.success, window.pin.error);

@@ -2,19 +2,23 @@
 
 (function () {
   var MUFFIN_POINT_HEIGHT = 22;
+  var DECIMAL = 10; // десятичная система счисления
+  var MUFFIN_CENTER = 0; // в неактивном состоянии у главного маффина нет острого конца
+  var MUFFIN_LEFT = 570; // координата слева
+  var MUFFIN_TOP = 375; // координата сверху
 
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
-  var mapPins = document.querySelector('.map__pins');
   var form = document.querySelector('.ad-form');
   var formInputs = form.querySelectorAll('input');
   var formSelects = form.querySelectorAll('select');
   var descriptionField = form.querySelector('#description');
   var submitButton = form.querySelector('.ad-form__submit');
   var filtersForm = document.querySelector('.map__filters');
+  var resetButton = form.querySelector('.ad-form__reset');
 
-  var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
-  var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
+  var buttonCoordinateLeft = parseInt(mapPinMain.style.left, DECIMAL);
+  var buttonCoordinateTop = parseInt(mapPinMain.style.top, DECIMAL);
 
   // Режим деактивации до нажатия на указатель
   var deactivateMap = function () {
@@ -27,10 +31,11 @@
     });
 
     descriptionField.setAttribute('disabled', 'disabled');
-    window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
+    window.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_CENTER);
 
     filtersForm.classList.add('map__filters--disabled');
     submitButton.setAttribute('disabled', 'disabled');
+    resetButton.setAttribute('disabled', 'disabled');
   };
 
   deactivateMap();
@@ -39,7 +44,7 @@
   // Режим активации карты
   var activateMap = function () {
     map.classList.remove('map--faded');
-    mapPins.appendChild(window.pinFragment);
+    window.render(window.adverts);
     form.classList.remove('ad-form--disabled');
     descriptionField.removeAttribute('disabled');
 
@@ -52,6 +57,7 @@
     });
 
     submitButton.removeAttribute('disabled');
+    resetButton.removeAttribute('disabled');
     filtersForm.classList.remove('map__filters--disabled');
   };
 
@@ -61,13 +67,14 @@
 
   mapPinMain.addEventListener('keydown', function (keyEvt) {
     if (window.util.isEnterEvent(keyEvt)) {
-      window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+      window.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
     }
   });
 
   var resetMap = function () {
-    mapPinMain.style.left = 570 + 'px';
-    mapPinMain.style.top = 375 + 'px';
+    mapPinMain.style.left = MUFFIN_LEFT + 'px';
+    mapPinMain.style.top = MUFFIN_TOP + 'px';
+
     var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     pins.forEach(function (pin) {
@@ -75,7 +82,10 @@
     });
 
     var popup = map.querySelector('.popup');
-    popup.remove();
+    if (popup) {
+      popup.remove();
+    }
+
     map.classList.add('map--faded');
     deactivateMap();
   };

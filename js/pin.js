@@ -1,13 +1,9 @@
 'use strict';
 
 (function () {
-  var MUFFIN_WIDTH = 40;
-  var MUFFIN_HEIGHT = 44;
-
   // Создание и заполнение фрагмента
-  var successHandler = function (cards) {
-    // window.serverData = cards;
-    window.render(cards);
+  var successHandler = function (adverts) {
+    window.adverts = adverts;
   };
 
   var errorHandler = function (errorMessage) {
@@ -24,16 +20,7 @@
 
   window.backend.load(successHandler, errorHandler);
 
-  var getPinCoords = function (x, y, pointer) {
-    var coordX = x + (MUFFIN_WIDTH / 2);
-    var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
-
-    var addressInput = document.querySelector('#address');
-    addressInput.value = coordX + ', ' + coordY;
-  };
-
   window.pin = {
-    getCoords: getPinCoords,
     success: successHandler,
     error: errorHandler
   };
