@@ -67,6 +67,12 @@
           }
         });
 
+        popupCloseButton.addEventListener('keydown', function (keyEvt) {
+          if (window.util.isEnterEvent(keyEvt)) {
+            closePopup(card);
+          }
+        });
+
         document.addEventListener('keydown', onPopupEscPress);
 
         filtersContainer.before(card);

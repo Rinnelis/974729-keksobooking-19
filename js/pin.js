@@ -3,7 +3,9 @@
 (function () {
   // Создание и заполнение фрагмента
   var successHandler = function (adverts) {
-    window.adverts = adverts;
+    window.adverts = adverts.filter(function (advert) {
+      return 'offer' in advert;
+    });
   };
 
   var errorHandler = function (errorMessage) {

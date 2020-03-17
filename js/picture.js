@@ -12,30 +12,20 @@
 
   avatarChooser.addEventListener('change', function (evt) {
     var file = evt.target.files[0];
-    var fileName = file.name.toLowerCase();
-
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
-
-    if (matches) {
-      var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        avatarPicture.src = reader.result;
-      });
-
-      reader.readAsDataURL(file);
-    }
+    uploadPicture(file, avatarPicture);
   });
 
   apartmentPhotoChooser.addEventListener('change', function (evt) {
     var img = document.createElement('img');
     img.width = PICTURE_WIDTH;
     img.height = PICTURE_HEIGHT;
-    apartmentPicture.appendChild(img);
 
     var file = evt.target.files[0];
+    uploadPicture(file, img);
+    apartmentPicture.appendChild(img);
+  });
+
+  var uploadPicture = function (file, preview) {
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
@@ -46,42 +36,10 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        img.src = reader.result;
+        preview.src = reader.result;
       });
 
       reader.readAsDataURL(file);
     }
-  });
-
-  //
-
-  // var changePicture = function (preview) {
-  //   var file = changePicture.files[0];
-  //   var fileName = file.name.toLowerCase();
-
-  //   var matches = FILE_TYPES.some(function (it) {
-  //     return fileName.endsWith(it);
-  //   });
-
-  //   if (matches) {
-  //     var reader = new FileReader();
-
-  //     reader.addEventListener('load', function () {
-  //       preview.src = reader.result;
-  //     });
-
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // avatarChooser.addEventListener('click', function () {
-  //   changePicture(avatarPicture);
-  // });
-  // apartmentPhotoChooser.addEventListener('click', function () {
-  //   var img = document.createElement('img');
-  //   img.width = PICTURE_WIDTH;
-  //   img.height = PICTURE_HEIGHT;
-  //   apartmentPicture.appendChild(img);
-  //   changePicture(img);
-  // });
+  };
 })();

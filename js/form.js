@@ -3,12 +3,16 @@
 (function () {
   var ZERO_GUESTS = 0;
   var HUNDRED_ROOMS = 100;
+  var DEFAULT_IMAGE = 'img/muffin-grey.svg';
 
   var form = document.querySelector('.ad-form');
+  var filtersForm = document.querySelector('.map__filters');
   var timeIN = form.querySelector('#timein');
   var timeOut = form.querySelector('#timeout');
   var resetButton = form.querySelector('.ad-form__reset');
   var map = document.querySelector('.map');
+  var avatarPicture = document.querySelector('.ad-form-header__preview img');
+  var apartmentPicture = document.querySelector('.ad-form__photo');
 
   var MinPrice = {
     BUNGALO: 0,
@@ -20,7 +24,10 @@
   // Очистка формы
   resetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
+    avatarPicture.src = DEFAULT_IMAGE;
+    apartmentPicture.innerHTML = '';
     form.reset();
+    filtersForm.reset();
     window.map.reset();
     form.classList.add('ad-form--disabled');
   });

@@ -5,6 +5,7 @@
   var MUFFIN_WIDTH = 40;
   var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
+  var HALF_MUFFIN = 2;
   var pinHandler = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var minLeftBorder = -20;
@@ -70,8 +71,8 @@
   });
 
   window.getCoords = function (x, y, pointer) {
-    var coordX = x + (MUFFIN_WIDTH / 2);
-    var coordY = y + (MUFFIN_HEIGHT / 2) + pointer;
+    var coordX = x + (MUFFIN_WIDTH / HALF_MUFFIN);
+    var coordY = y + (MUFFIN_HEIGHT / HALF_MUFFIN) + pointer;
 
     var addressInput = document.querySelector('#address');
     addressInput.value = coordX + ', ' + coordY;
