@@ -16,12 +16,14 @@
   var submitButton = form.querySelector('.ad-form__submit');
   var filtersForm = document.querySelector('.map__filters');
   var resetButton = form.querySelector('.ad-form__reset');
+  var roomCapacity = document.querySelector('#capacity');
 
   var buttonCoordinateLeft = parseInt(mapPinMain.style.left, DECIMAL);
   var buttonCoordinateTop = parseInt(mapPinMain.style.top, DECIMAL);
 
   // Режим деактивации до нажатия на указатель
   var deactivateMap = function () {
+    roomCapacity.style.border = 'none';
     formInputs.forEach(function (input) {
       input.setAttribute('disabled', 'disabled');
     });

@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var ZERO_GUESTS = 0;
-  var HUNDRED_ROOMS = 100;
+  var ZERO_GUESTS = '0';
+  var HUNDRED_ROOMS = '100';
   var DEFAULT_IMAGE = 'img/muffin-grey.svg';
 
   var form = document.querySelector('.ad-form');
@@ -47,12 +47,16 @@
 
   var getRoomValidation = function () {
     if (roomNumber.value === HUNDRED_ROOMS && roomCapacity.value !== ZERO_GUESTS) {
+      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Это количество комнат не предназначено для гостей');
     } else if (roomNumber.value !== HUNDRED_ROOMS && roomCapacity.value === ZERO_GUESTS) {
+      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Пожалуйста, укажите количество гостей');
     } else if (roomNumber.value < roomCapacity.value) {
+      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Количество гостей должно быть не более ' + roomNumber.value);
     } else {
+      roomCapacity.style.border = 'none';
       roomCapacity.setCustomValidity('');
     }
   };
@@ -78,12 +82,16 @@
 
   priceInput.addEventListener('change', function () {
     if (priceInput.validity.valueMissing) {
+      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('Обязательное поле');
     } else if (priceInput.validity.typeMismatch) {
+      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('В это поле можно вводить только цифры');
     } else if (priceInput.validity.rangeOverflow) {
+      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('Цена не должна превышать 1 000 000');
     } else {
+      priceInput.style.border = 'none';
       priceInput.setCustomValidity('');
     }
   });
@@ -93,15 +101,20 @@
 
   titleInput.addEventListener('change', function () {
     if (titleInput.validity.tooShort) {
+      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
     } else if (titleInput.validity.tooLong) {
+      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
     } else if (titleInput.validity.valueMissing) {
+      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Обязательное поле');
     } else {
+      titleInput.style.border = 'none';
       titleInput.setCustomValidity('');
     }
   });
+
 
   // Показ сообщения об успешной подаче объявления
   var successTemplate = document.querySelector('#success').content.querySelector('.success');

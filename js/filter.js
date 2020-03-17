@@ -120,5 +120,4 @@
     FilterStates[name] = value;
     window.debounce(window.render(filterOffers()));
   });
-
 })();
