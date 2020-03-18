@@ -14,9 +14,9 @@
 
       xhr.addEventListener('load', function () {
         if (xhr.status === StatusCode.OK) {
-          onLoad(xhr.response);
+          return onLoad(xhr.response);
         }
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        return onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       });
 
       xhr.addEventListener('error', function () {
@@ -40,9 +40,9 @@
 
       xhr.addEventListener('load', function () {
         if (xhr.status === StatusCode.OK) {
-          onLoad(xhr.response);
+          return onLoad(xhr.response);
         }
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        return onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       });
 
       xhr.addEventListener('error', function () {
