@@ -51,6 +51,10 @@
     emptyList(featuresList);
     var features = card.offer.features;
 
+    if (features.length === 0) {
+      featuresList.remove();
+    }
+
     features.forEach(function (feature) {
       var featureMarkup = createFeatureMarkup(feature);
       featuresList.appendChild(featureMarkup);
