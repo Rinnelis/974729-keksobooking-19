@@ -165,6 +165,7 @@
       map.before(renderSuccessMessage());
       form.classList.add(disabledFormClass);
       submitButton.textContent = defaultMessage;
+      getRoomValidation();
       roomType.addEventListener('change', getTypeValidation);
       roomNumber.addEventListener('change', getRoomValidation);
       roomCapacity.addEventListener('change', getRoomValidation);
