@@ -108,7 +108,7 @@
       popup.remove();
     }
 
-    map.classList.add('map--faded');
+    map.classList.add(mapFadedClass);
     deactivateMap();
   };
 

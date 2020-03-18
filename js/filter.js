@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ANY = 'any';
   var Numbers = {
     ZERO: '0',
     ONE: '1',
@@ -67,28 +68,28 @@
 
   var filterOffers = function () {
     var filteredByType = window.adverts.filter(function (ad) {
-      if (filterStates['housing-type'] === 'any') {
+      if (filterStates['housing-type'] === ANY) {
         return true;
       }
       return ad.offer.type === filterStates['housing-type'];
     });
 
     var filteredByPrice = filteredByType.filter(function (ad) {
-      if (filterStates['housing-price'] === 'any') {
+      if (filterStates['housing-price'] === ANY) {
         return true;
       }
       return priceComparer[filterStates['housing-price']](ad.offer.price);
     });
 
     var filteredByRoom = filteredByPrice.filter(function (ad) {
-      if (filterStates['housing-rooms'] === 'any') {
+      if (filterStates['housing-rooms'] === ANY) {
         return true;
       }
       return filterRooms(filterStates['housing-rooms'], ad);
     });
 
     var filteredByGuest = filteredByRoom.filter(function (ad) {
-      if (filterStates['housing-guests'] === 'any') {
+      if (filterStates['housing-guests'] === ANY) {
         return true;
       }
       return filterGuests(filterStates['housing-guests'], ad);

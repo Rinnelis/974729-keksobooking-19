@@ -16,6 +16,7 @@
   var apartmentPicture = document.querySelector('.ad-form__photo');
   var disabledFormClass = 'ad-form--disabled';
   var checkClass = 'check';
+  var hiddenClass = 'hidden';
 
   var MinPrice = {
     BUNGALO: 0,
@@ -118,7 +119,7 @@
     var popup = template.cloneNode(true);
 
     var closePopup = function () {
-      popup.classList.add('hidden');
+      popup.classList.add(hiddenClass);
       document.removeEventListener('keydown', closeMessage);
     };
 
@@ -165,6 +166,8 @@
       form.classList.add(disabledFormClass);
       submitButton.textContent = defaultMessage;
       roomType.addEventListener('change', getTypeValidation);
+      roomNumber.addEventListener('change', getRoomValidation);
+      roomCapacity.addEventListener('change', getRoomValidation);
       window.backend.load(window.handlers.success, window.handlers.error);
     };
 

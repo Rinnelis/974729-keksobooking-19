@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var featureClass = 'popup__feature';
+  var photoClass = 'popup__photo';
   var Img = {
     WIDTH: 45,
     HEIGHT: 40,
@@ -16,8 +18,8 @@
 
   var createFeatureMarkup = function (feature) {
     var li = document.createElement('li');
-    li.classList.add('popup__feature');
-    li.classList.add('popup__feature--' + feature);
+    li.classList.add(featureClass);
+    li.classList.add(featureClass + '--' + feature);
     return li;
   };
 
@@ -27,7 +29,7 @@
 
   var createPhotoMarkup = function () {
     var img = document.createElement('img');
-    img.classList.add('popup__photo');
+    img.classList.add(photoClass);
     img.width = Img.WIDTH;
     img.height = Img.HEIGHT;
     img.alt = Img.ALT;
@@ -63,6 +65,10 @@
     var photosList = cardElement.querySelector('.popup__photos');
     emptyList(photosList);
     var photos = card.offer.photos;
+
+    if (photos.length === 0) {
+      photosList.remove();
+    }
 
     photos.forEach(function (photo) {
       var picture = createPhotoMarkup();

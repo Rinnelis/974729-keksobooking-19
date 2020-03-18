@@ -2,13 +2,13 @@
 
 (function () {
   // Создание и заполнение фрагмента
-  var successHandler = function (adverts) {
+  var onSuccess = function (adverts) {
     window.adverts = adverts.filter(function (advert) {
       return 'offer' in advert;
     });
   };
 
-  var errorHandler = function (errorMessage) {
+  var onError = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -20,10 +20,10 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.backend.load(successHandler, errorHandler);
+  window.backend.load(onSuccess, onError);
 
   window.handlers = {
-    success: successHandler,
-    error: errorHandler
+    success: onSuccess,
+    error: onError
   };
 })();

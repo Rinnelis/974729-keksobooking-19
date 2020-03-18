@@ -2,10 +2,18 @@
 
 (function () {
   var LEFT_MOUSE_BUTTON = 1;
-  var MIN_ADVERTS = 0;
-  var MAX_ADVERTS = 5;
-  var PIN_HALF_WIDTH = 25;
-  var PIN_HALF_HEIGHT = 35;
+
+  var Adverts = {
+    MIN: 0,
+    MAX: 5
+  };
+
+  var PinHalf = {
+    WIDTH: 25,
+    HEIGHT: 35
+  };
+
+  var pinActiveClass = 'map__pin--active';
 
   // Создание элемента указателя по шаблону
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -15,7 +23,7 @@
   var renderPin = function (card) {
     var pinElement = pinTemplate.cloneNode(true);
 
-    pinElement.style = 'left: ' + (card.location.x - PIN_HALF_WIDTH) + 'px; top: ' + (card.location.y - PIN_HALF_HEIGHT) + 'px;';
+    pinElement.style = 'left: ' + (card.location.x - PinHalf.WIDTH) + 'px; top: ' + (card.location.y - PinHalf.HEIGHT) + 'px;';
     pinElement.querySelector('img').src = card.author.avatar;
     return pinElement;
   };
@@ -28,7 +36,7 @@
       pin.remove();
     });
 
-    var cutOffers = offers.slice(MIN_ADVERTS, MAX_ADVERTS);
+    var cutOffers = offers.slice(Adverts.MIN, Adverts.MAX);
 
     cutOffers.forEach(function (offer) {
       var pin = renderPin(offer);
@@ -46,10 +54,10 @@
 
         var activePin = document.querySelector('.map__pin--active');
         if (activePin) {
-          activePin.classList.remove('map__pin--active');
+          activePin.classList.remove(pinActiveClass);
         }
 
-        pin.classList.add('map__pin--active');
+        pin.classList.add(pinActiveClass);
 
         var card = window.renderCard(offer);
 
