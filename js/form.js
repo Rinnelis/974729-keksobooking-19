@@ -164,6 +164,7 @@
       map.before(renderSuccessMessage());
       form.classList.add(disabledFormClass);
       submitButton.textContent = defaultMessage;
+      roomType.addEventListener('change', getTypeValidation);
       window.backend.load(window.handlers.success, window.handlers.error);
     };
 
