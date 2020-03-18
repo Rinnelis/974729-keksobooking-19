@@ -4,6 +4,7 @@
   var ZERO_GUESTS = '0';
   var HUNDRED_ROOMS = '100';
   var DEFAULT_IMAGE = 'img/muffin-grey.svg';
+  var NONE = 'none';
 
   var form = document.querySelector('.ad-form');
   var filtersForm = document.querySelector('.map__filters');
@@ -13,6 +14,8 @@
   var map = document.querySelector('.map');
   var avatarPicture = document.querySelector('.ad-form-header__preview img');
   var apartmentPicture = document.querySelector('.ad-form__photo');
+  var disabledFormClass = 'ad-form--disabled';
+  var checkClass = 'check';
 
   var MinPrice = {
     BUNGALO: 0,
@@ -29,8 +32,12 @@
     form.reset();
     filtersForm.reset();
     window.map.reset();
-    form.classList.add('ad-form--disabled');
+    form.classList.add(disabledFormClass);
   });
+
+  form.addEventListener('invalid', function () {
+    form.classList.add(checkClass);
+  }, true);
 
   // Связь времени чек-ина и чек-аута
   timeIN.addEventListener('change', function (evt) {
@@ -47,16 +54,12 @@
 
   var getRoomValidation = function () {
     if (roomNumber.value === HUNDRED_ROOMS && roomCapacity.value !== ZERO_GUESTS) {
-      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Это количество комнат не предназначено для гостей');
     } else if (roomNumber.value !== HUNDRED_ROOMS && roomCapacity.value === ZERO_GUESTS) {
-      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Пожалуйста, укажите количество гостей');
     } else if (roomNumber.value < roomCapacity.value) {
-      roomCapacity.style.border = '2px solid red';
       roomCapacity.setCustomValidity('Количество гостей должно быть не более ' + roomNumber.value);
     } else {
-      roomCapacity.style.border = 'none';
       roomCapacity.setCustomValidity('');
     }
   };
@@ -82,16 +85,12 @@
 
   priceInput.addEventListener('change', function () {
     if (priceInput.validity.valueMissing) {
-      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('Обязательное поле');
     } else if (priceInput.validity.typeMismatch) {
-      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('В это поле можно вводить только цифры');
     } else if (priceInput.validity.rangeOverflow) {
-      priceInput.style.border = '2px solid red';
       priceInput.setCustomValidity('Цена не должна превышать 1 000 000');
     } else {
-      priceInput.style.border = 'none';
       priceInput.setCustomValidity('');
     }
   });
@@ -101,90 +100,80 @@
 
   titleInput.addEventListener('change', function () {
     if (titleInput.validity.tooShort) {
-      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
     } else if (titleInput.validity.tooLong) {
-      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
     } else if (titleInput.validity.valueMissing) {
-      titleInput.style.border = '2px solid red';
       titleInput.setCustomValidity('Обязательное поле');
     } else {
-      titleInput.style.border = 'none';
+      titleInput.style.border = NONE;
       titleInput.setCustomValidity('');
     }
   });
 
-
   // Показ сообщения об успешной подаче объявления
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
 
-  var renderSuccessMessage = function () {
-    var successMessage = successTemplate.cloneNode(true);
-    var fragment = document.createDocumentFragment();
-    var success = fragment.appendChild(successMessage);
+  var renderPopup = function (template) {
+    var popup = template.cloneNode(true);
+
+    var closePopup = function () {
+      popup.classList.add('hidden');
+      document.removeEventListener('keydown', closeMessage);
+    };
 
     var closeMessage = function (keyEvt) {
       if (window.util.isEscEvent(keyEvt)) {
-        success.classList.add('hidden');
+        closePopup();
       }
     };
 
     document.addEventListener('keydown', closeMessage);
     document.addEventListener('click', function () {
-      success.classList.add('hidden');
+      closePopup();
     });
-    return success;
+    return popup;
   };
 
   // Показ сообщения об ошибке при размещении объявления
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
+  var renderSuccessMessage = function () {
+    return renderPopup(successTemplate);
+  };
+
   var renderErrorMessage = function () {
-    var errorMessage = errorTemplate.cloneNode(true);
-    var fragment = document.createDocumentFragment();
-    var error = fragment.appendChild(errorMessage);
-    var errorButton = errorTemplate.querySelector('.error__button');
-
-    errorButton.addEventListener('click', function () {
-      error.classList.add('hidden');
-    });
-
-    var closeMessage = function (keyEvt) {
-      if (window.util.isEscEvent(keyEvt)) {
-        error.classList.add('hidden');
-      }
-    };
-
-    document.addEventListener('keydown', closeMessage);
-    document.addEventListener('click', function () {
-      error.classList.add('hidden');
-    });
-    return error;
+    return renderPopup(errorTemplate);
   };
 
   // Отправка данных формы на сервер
+  var submitButton = form.querySelector('.ad-form__submit');
+  var sendingMessage = 'Публикуем...';
+  var defaultMessage = 'Опубликовать';
+
   form.addEventListener('submit', function (evt) {
-    var submitButton = form.querySelector('.ad-form__submit');
-    submitButton.textContent = 'Публикуем...';
+    submitButton.textContent = sendingMessage;
     submitButton.disabled = true;
 
-    var successfulSend = function () {
+    var onSuccessfulSend = function () {
+      avatarPicture.src = DEFAULT_IMAGE;
+      apartmentPicture.innerHTML = '';
       form.reset();
+      filtersForm.reset();
       window.map.reset();
       map.before(renderSuccessMessage());
-      form.classList.add('ad-form--disabled');
-      submitButton.textContent = 'Опубликовать';
-      window.backend.load(window.pin.success, window.pin.error);
+      form.classList.add(disabledFormClass);
+      submitButton.textContent = defaultMessage;
+      window.backend.load(window.handlers.success, window.handlers.error);
     };
 
-    var errorSend = function () {
-      submitButton.textContent = 'Опубликовать';
+    var onErrorSend = function () {
+      submitButton.textContent = defaultMessage;
       submitButton.disabled = false;
       map.before(renderErrorMessage());
     };
 
-    window.backend.save(new FormData(form), successfulSend, errorSend);
+    window.backend.save(new FormData(form), onSuccessfulSend, onErrorSend);
     evt.preventDefault();
   });
 })();

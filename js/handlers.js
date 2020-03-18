@@ -22,7 +22,7 @@
 
   window.backend.load(successHandler, errorHandler);
 
-  window.pin = {
+  window.handlers = {
     success: successHandler,
     error: errorHandler
   };

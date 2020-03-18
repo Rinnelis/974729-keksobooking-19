@@ -1,9 +1,16 @@
 'use strict';
 
 (function () {
+  var Numbers = {
+    ZERO: '0',
+    ONE: '1',
+    TWO: '2',
+    THREE: '3'
+  };
+
   var filtersForm = document.querySelector('.map__filters');
 
-  var FilterStates = {
+  var filterStates = {
     'housing-type': 'any',
     'housing-price': 'any',
     'housing-rooms': 'any',
@@ -11,48 +18,48 @@
     'featuresList': []
   };
 
-  var Prices = {
+  var Price = {
     MIDDLE: 10000,
     HIGH: 50000
   };
 
-  var PriceComparer = {
+  var priceComparer = {
     low: function (price) {
-      return price < Prices.MIDDLE;
+      return price < Price.MIDDLE;
     },
     middle: function (price) {
-      return price >= Prices.MIDDLE && price < Prices.HIGH;
+      return price >= Price.MIDDLE && price < Price.HIGH;
     },
     high: function (price) {
-      return price >= Prices.HIGH;
+      return price >= Price.HIGH;
     }
   };
 
   var filterRooms = function (filterValue, advert) {
     switch (filterValue) {
-      case '1':
-        return advert.offer.rooms === 1;
-      case '2':
-        return advert.offer.rooms === 2;
-      case '3':
+      case Numbers.ONE:
+        return advert.offer.rooms === Number(Numbers.ONE);
+      case Numbers.TWO:
+        return advert.offer.rooms === Number(Numbers.TWO);
+      case Numbers.THREE:
       default:
-        return advert.offer.rooms === 3;
+        return advert.offer.rooms === Number(Numbers.THREE);
     }
   };
 
   var filterGuests = function (filterValue, advert) {
     switch (filterValue) {
-      case '0':
-        return advert.offer.guests === 0;
-      case '1':
-        return advert.offer.guests === 1;
-      case '2':
+      case Numbers.ZERO:
+        return advert.offer.guests === Number(Numbers.ZERO);
+      case Numbers.ONE:
+        return advert.offer.guests === Number(Numbers.ONE);
+      case Numbers.TWO:
       default:
-        return advert.offer.guests === 2;
+        return advert.offer.guests === Number(Numbers.TWO);
     }
   };
 
-  var arrayContainsArray = function (superset, subset) {
+  var isArrayContainsArray = function (superset, subset) {
     return subset.every(function (value) {
       return (superset.indexOf(value) >= 0);
     });
@@ -60,38 +67,38 @@
 
   var filterOffers = function () {
     var filteredByType = window.adverts.filter(function (ad) {
-      if (FilterStates['housing-type'] === 'any') {
+      if (filterStates['housing-type'] === 'any') {
         return true;
       }
-      return ad.offer.type === FilterStates['housing-type'];
+      return ad.offer.type === filterStates['housing-type'];
     });
 
     var filteredByPrice = filteredByType.filter(function (ad) {
-      if (FilterStates['housing-price'] === 'any') {
+      if (filterStates['housing-price'] === 'any') {
         return true;
       }
-      return PriceComparer[FilterStates['housing-price']](ad.offer.price);
+      return priceComparer[filterStates['housing-price']](ad.offer.price);
     });
 
     var filteredByRoom = filteredByPrice.filter(function (ad) {
-      if (FilterStates['housing-rooms'] === 'any') {
+      if (filterStates['housing-rooms'] === 'any') {
         return true;
       }
-      return filterRooms(FilterStates['housing-rooms'], ad);
+      return filterRooms(filterStates['housing-rooms'], ad);
     });
 
     var filteredByGuest = filteredByRoom.filter(function (ad) {
-      if (FilterStates['housing-guests'] === 'any') {
+      if (filterStates['housing-guests'] === 'any') {
         return true;
       }
-      return filterGuests(FilterStates['housing-guests'], ad);
+      return filterGuests(filterStates['housing-guests'], ad);
     });
 
     var filteredByFeature = filteredByGuest.filter(function (ad) {
-      if (FilterStates['featuresList'] === []) {
+      if (filterStates['featuresList'] === []) {
         return true;
       }
-      return arrayContainsArray(ad.offer.features, FilterStates['featuresList']);
+      return isArrayContainsArray(ad.offer.features, filterStates['featuresList']);
     });
     return filteredByFeature;
   };
@@ -106,18 +113,18 @@
     }
 
     if (name === 'features') {
-      if (FilterStates.featuresList.includes(value)) {
-        FilterStates.featuresList = FilterStates.featuresList.filter(function (feature) {
+      if (filterStates.featuresList.includes(value)) {
+        filterStates.featuresList = filterStates.featuresList.filter(function (feature) {
           return !(feature === value);
         });
       } else {
-        FilterStates.featuresList.push(value);
+        filterStates.featuresList.push(value);
       }
-      window.debounce(window.render(filterOffers()));
+      window.render(filterOffers());
       return;
     }
 
-    FilterStates[name] = value;
-    window.debounce(window.render(filterOffers()));
+    filterStates[name] = value;
+    window.render(filterOffers());
   });
 })();

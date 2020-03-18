@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
-  var IMG_WIDTH = 45;
-  var IMG_HEIGHT = 40;
-  var IMG_ALT = 'Фотография жилья';
+  var Img = {
+    WIDTH: 45,
+    HEIGHT: 40,
+    ALT: 'Фотография жилья'
+  };
 
   var ApartmentTypesMap = {
     'BUNGALO': 'Бунгало',
@@ -26,9 +28,9 @@
   var createPhotoMarkup = function () {
     var img = document.createElement('img');
     img.classList.add('popup__photo');
-    img.width = IMG_WIDTH;
-    img.height = IMG_HEIGHT;
-    img.alt = IMG_ALT;
+    img.width = Img.WIDTH;
+    img.height = Img.HEIGHT;
+    img.alt = Img.ALT;
     return img;
   };
 

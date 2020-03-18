@@ -6,6 +6,7 @@
   var MUFFIN_HEIGHT = 44;
   var MUFFIN_POINT_HEIGHT = 22;
   var HALF_MUFFIN = 2;
+  var PIXEL = 'px';
   var pinHandler = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var minLeftBorder = -20;
@@ -45,11 +46,11 @@
       var newY = pinHandler.offsetTop - shift.y;
 
       if (newX > minLeftBorder && newX <= (mapWidth - pinWidth)) {
-        pinHandler.style.left = newX + 'px';
+        pinHandler.style.left = newX + PIXEL;
       }
 
       if (newY > minTopBorder && newY < minBottomBorder) {
-        pinHandler.style.top = newY + 'px';
+        pinHandler.style.top = newY + PIXEL;
       }
 
       window.getCoords(newX, newY, MUFFIN_POINT_HEIGHT);

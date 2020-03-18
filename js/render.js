@@ -4,23 +4,23 @@
   var LEFT_MOUSE_BUTTON = 1;
   var MIN_ADVERTS = 0;
   var MAX_ADVERTS = 5;
+  var PIN_HALF_WIDTH = 25;
+  var PIN_HALF_HEIGHT = 35;
 
   // Создание элемента указателя по шаблону
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var filtersContainer = document.querySelector('.map__filters-container');
-  var mapPins = document.querySelector('.map__pins');
+  var mapPinsElement = document.querySelector('.map__pins');
 
   var renderPin = function (card) {
     var pinElement = pinTemplate.cloneNode(true);
-    var pinXTransfer = 25; // половина ширины метки
-    var pinУTransfer = 35; // половина высоты метки, включая острый конец
 
-    pinElement.style = 'left: ' + (card.location.x - pinXTransfer) + 'px; top: ' + (card.location.y - pinУTransfer) + 'px;';
+    pinElement.style = 'left: ' + (card.location.x - PIN_HALF_WIDTH) + 'px; top: ' + (card.location.y - PIN_HALF_HEIGHT) + 'px;';
     pinElement.querySelector('img').src = card.author.avatar;
     return pinElement;
   };
 
-  window.render = function (offers) {
+  window.render = window.debounce(function (offers) {
     var pinFragment = document.createDocumentFragment();
 
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -79,6 +79,6 @@
       });
       pinFragment.appendChild(pin);
     });
-    mapPins.appendChild(pinFragment);
-  };
+    mapPinsElement.appendChild(pinFragment);
+  });
 })();
