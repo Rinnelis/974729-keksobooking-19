@@ -18,6 +18,11 @@
   var checkClass = 'check';
   var hiddenClass = 'hidden';
 
+  var Message = {
+    DEFAULT: 'Опубликовать',
+    SENDING: 'Публикуем...'
+  };
+
   var MinPrice = {
     BUNGALO: 0,
     FLAT: 1000,
@@ -149,11 +154,9 @@
 
   // Отправка данных формы на сервер
   var submitButton = form.querySelector('.ad-form__submit');
-  var sendingMessage = 'Публикуем...';
-  var defaultMessage = 'Опубликовать';
 
   form.addEventListener('submit', function (evt) {
-    submitButton.textContent = sendingMessage;
+    submitButton.textContent = Message.SENDING;
     submitButton.disabled = true;
 
     var onSuccessfulSend = function () {
@@ -164,16 +167,13 @@
       window.map.reset();
       map.before(renderSuccessMessage());
       form.classList.add(disabledFormClass);
-      submitButton.textContent = defaultMessage;
+      submitButton.textContent = Message.DEFAULT;
       getRoomValidation();
-      roomType.addEventListener('change', getTypeValidation);
-      roomNumber.addEventListener('change', getRoomValidation);
-      roomCapacity.addEventListener('change', getRoomValidation);
       window.backend.load(window.handlers.success, window.handlers.error);
     };
 
     var onErrorSend = function () {
-      submitButton.textContent = defaultMessage;
+      submitButton.textContent = Message.DEFAULT;
       submitButton.disabled = false;
       map.before(renderErrorMessage());
     };
