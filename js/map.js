@@ -2,35 +2,54 @@
 
 (function () {
   var MUFFIN_POINT_HEIGHT = 22;
+  var DECIMAL = 10; // десятичная система счисления
+  var MUFFIN_CENTER = 0; // в неактивном состоянии у главного маффина нет острого конца
+  var MUFFIN_LEFT = 570; // координата слева
+  var MUFFIN_TOP = 375; // координата сверху
+  var DISABLED = 'disabled';
 
   var map = document.querySelector('.map');
   var mapPinMain = document.querySelector('.map__pin--main');
-  var mapPins = document.querySelector('.map__pins');
   var form = document.querySelector('.ad-form');
   var formInputs = form.querySelectorAll('input');
   var formSelects = form.querySelectorAll('select');
   var descriptionField = form.querySelector('#description');
   var submitButton = form.querySelector('.ad-form__submit');
   var filtersForm = document.querySelector('.map__filters');
+  var filterInputs = filtersForm.querySelectorAll('input');
+  var filterSelects = filtersForm.querySelectorAll('select');
+  var resetButton = form.querySelector('.ad-form__reset');
+  var disabledFiltersClass = 'map__filters--disabled';
+  var disabledFormClass = 'ad-form--disabled';
+  var mapFadedClass = 'map--faded';
 
-  var buttonCoordinateLeft = parseInt(mapPinMain.style.left, 10);
-  var buttonCoordinateTop = parseInt(mapPinMain.style.top, 10);
+  var buttonCoordinateLeft = parseInt(mapPinMain.style.left, DECIMAL);
+  var buttonCoordinateTop = parseInt(mapPinMain.style.top, DECIMAL);
 
   // Режим деактивации до нажатия на указатель
   var deactivateMap = function () {
     formInputs.forEach(function (input) {
-      input.setAttribute('disabled', 'disabled');
+      input.setAttribute(DISABLED, DISABLED);
     });
 
     formSelects.forEach(function (select) {
-      select.setAttribute('disabled', 'disabled');
+      select.setAttribute(DISABLED, DISABLED);
     });
 
-    descriptionField.setAttribute('disabled', 'disabled');
-    window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, 0);
+    filterInputs.forEach(function (input) {
+      input.setAttribute(DISABLED, DISABLED);
+    });
 
-    filtersForm.classList.add('map__filters--disabled');
-    submitButton.setAttribute('disabled', 'disabled');
+    filterSelects.forEach(function (select) {
+      select.setAttribute(DISABLED, DISABLED);
+    });
+
+    descriptionField.setAttribute(DISABLED, DISABLED);
+    window.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_CENTER);
+
+    filtersForm.classList.add(disabledFiltersClass);
+    submitButton.setAttribute(DISABLED, DISABLED);
+    resetButton.setAttribute(DISABLED, DISABLED);
   };
 
   deactivateMap();
@@ -38,21 +57,30 @@
 
   // Режим активации карты
   var activateMap = function () {
-    map.classList.remove('map--faded');
-    mapPins.appendChild(window.pinFragment);
-    form.classList.remove('ad-form--disabled');
-    descriptionField.removeAttribute('disabled');
+    map.classList.remove(mapFadedClass);
+    window.render(window.adverts);
+    form.classList.remove(disabledFormClass);
+    descriptionField.removeAttribute(DISABLED);
 
     formInputs.forEach(function (input) {
-      input.removeAttribute('disabled');
+      input.removeAttribute(DISABLED);
     });
 
     formSelects.forEach(function (select) {
-      select.removeAttribute('disabled');
+      select.removeAttribute(DISABLED);
     });
 
-    submitButton.removeAttribute('disabled');
-    filtersForm.classList.remove('map__filters--disabled');
+    filterInputs.forEach(function (input) {
+      input.removeAttribute(DISABLED);
+    });
+
+    filterSelects.forEach(function (select) {
+      select.removeAttribute(DISABLED);
+    });
+
+    submitButton.removeAttribute(DISABLED);
+    resetButton.removeAttribute(DISABLED);
+    filtersForm.classList.remove(disabledFiltersClass);
   };
 
   mapPinMain.addEventListener('click', function () {
@@ -61,13 +89,14 @@
 
   mapPinMain.addEventListener('keydown', function (keyEvt) {
     if (window.util.isEnterEvent(keyEvt)) {
-      window.pin.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
+      window.getCoords(buttonCoordinateLeft, buttonCoordinateTop, MUFFIN_POINT_HEIGHT);
     }
   });
 
   var resetMap = function () {
-    mapPinMain.style.left = 570 + 'px';
-    mapPinMain.style.top = 375 + 'px';
+    mapPinMain.style.left = MUFFIN_LEFT + 'px';
+    mapPinMain.style.top = MUFFIN_TOP + 'px';
+
     var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     pins.forEach(function (pin) {
@@ -75,7 +104,10 @@
     });
 
     var popup = map.querySelector('.popup');
-    popup.remove();
+    if (popup) {
+      popup.remove();
+    }
+
     map.classList.add('map--faded');
     deactivateMap();
   };
